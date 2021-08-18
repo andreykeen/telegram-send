@@ -1,0 +1,33 @@
+#!/bin/bash
+
+TOKEN=""
+URL="https://api.telegram.org/bot$TOKEN/sendMessage"
+MESSAGE="${1}"
+
+CHATS_LIST=(
+    ""
+)
+
+USE_TOR=""
+
+
+if [ ${#} -lt 1 ]; then
+    echo "Must be one or more arguments. Exit"
+    exit 0
+fi
+
+# Send request via TOR. FCK RKN
+if [ "${USE_TOR}" = "true" ]; then
+    SOCKET_HOST="--socks5-hostname 127.0.0.1:9050"
+    echo "USE"
+else
+    SOCKET_HOST=""
+    echo "NO USE"
+fi
+
+for i in ${!CHATS_LIST[*]}
+do
+    CHAT_ID=${CHATS_LIST[${i}]}
+    curl -s "${SOCKET_HOST}" -X POST $URL -d chat_id=$CHAT_ID -d text="$MESSAGE" > /dev/null
+    echo
+done
